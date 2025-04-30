@@ -2,6 +2,7 @@
 import Input from "../Input";
 import Button from "../Button";
 import Icon from "../icon";
+import Select from "../Select";
 import Loader from "../Loader";
 import TextLoader from "../TextLoader";
 import { useForm, FormProvider } from "react-hook-form";
@@ -187,23 +188,30 @@ export default function Form() {
               />
               {/* Documento */}
               <h3 className="font-semibold text-lg mt-4 mb-2">Documento</h3>
-              <Input
-                name="documentType"
-                label="Tipo de Documento (opcional)"
-                placeholder="RG, CNH, etc."
-              />
-              <Input
-                name="documentNumber"
-                label="Número do Documento (opcional)"
-                placeholder="Número"
-              />
-
+              <div className="flex gap-4">
+                <Select
+                  name="documentType"
+                  label="Tipo de Documento (opcional)"
+                  required={false}
+                  options={[
+                    { value: "RG", label: "RG" },
+                    { value: "CNH", label: "CNH" },
+                    { value: "Passaporte", label: "Passaporte" },
+                    { value: "Outro", label: "Outro" },
+                  ]}
+                />
+                <Input
+                  name="documentNumber"
+                  label="Número do Documento (opcional)"
+                  placeholder="Número"
+                />
+              </div>
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="documentImage"
                   className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold  rounded cursor-pointer bg-neutral-100  duration-200 transition-colors w-fit "
                 >
-                  Selecionar imagem do documento
+                  Selecionar documento
                 </label>
                 <input
                   id="documentImage"
@@ -229,10 +237,14 @@ export default function Form() {
               <h3 className="font-semibold text-lg mt-4 mb-2">
                 Conectar Rede Social
               </h3>
-              <Input
+              <Select
                 name="platform"
                 label="Plataforma (opcional)"
-                placeholder="Ex: twitter, instagram"
+                required={false}
+                options={[
+                  { value: "RJ", label: "Rio de Janeiro" },
+                  { value: "SP", label: "São Paulo" },
+                ]}
               />
               <Input
                 name="accountId"
