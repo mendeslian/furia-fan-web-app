@@ -32,7 +32,7 @@ export default function Features() {
   return (
     <section className="w-full py-20 relative border-y border-neutral-800 shadow-2xl bg-neutral-900">
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
         style={{
           backgroundImage: `url(${FuriaShirtBackground})`,
         }}
