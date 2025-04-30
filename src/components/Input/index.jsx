@@ -105,7 +105,7 @@ export default function Input({
       </div>
       {errors[name] && (
         <span className="text-red-500 text-xs font-semibold pl-1">
-          {errors[name].message || "Inválido"}
+          {errors[name].message || "Obrigatório"}
         </span>
       )}
     </div>
