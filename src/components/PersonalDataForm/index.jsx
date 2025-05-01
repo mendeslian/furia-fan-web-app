@@ -10,6 +10,7 @@ export default function PersonalDataForm() {
         placeholder="Nome completo"
         required={true}
       />
+      <Input name="email" label="Email" placeholder="Email" required={true} />
       <div className="flex gap-4">
         <Input name="street" label="Rua" placeholder="Rua" required={true} />
         <Input
@@ -96,20 +97,20 @@ export default function PersonalDataForm() {
       <Input
         name="attendedEvents"
         label="Eventos que participou (opcional)"
-        placeholder="Major Rio 2022, ESL Pro League"
-        helperText="Separe os eventos por vírgula"
+        placeholder="IEM Rio Major 2022|2022-11-13|Rio de Janeiro; BLAST Premier 2023|2023-06-20|São Paulo"
+        helperText="Formato: Nome|Data|Local (separe eventos com ponto e vírgula)"
       />
       <Input
         name="participatedActivities"
         label="Atividades que participou (opcional)"
-        placeholder="Meet & Greet, Workshops"
-        helperText="Separe as atividades por vírgula"
+        placeholder="Campeonato Universitário|2023-05-10|Participação em campeonato universitário"
+        helperText="Formato: Nome|Data|Descrição (separe atividades com ponto e vírgula)"
       />
       <Input
         name="purchases"
         label="Compras realizadas (opcional)"
-        placeholder="Camiseta oficial, Mousepad"
-        helperText="Separe as compras por vírgula"
+        placeholder="Camiseta FURIA|120|2023-08-10"
+        helperText="Formato: Item|Valor|Data (separe compras com ponto e vírgula)"
       />
     </>
   );

@@ -1,26 +1,29 @@
+import { useForm, FormProvider } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+
 // Components
 import Button from "../Button";
-import PersonalDataForm from "../PersonalDataForm";
 import Loader from "../Loader";
-import { useForm, FormProvider } from "react-hook-form";
-import { useState } from "react";
+import PersonalDataForm from "../PersonalDataForm";
+
+// Hooks
+import { useToast } from "../../hooks/useToast";
+
+// Services
 import { createUser } from "../../services/userService";
-import { useMutation } from "@tanstack/react-query";
 
 export default function Form() {
   const methods = useForm();
-  const [successMsg, setSuccessMsg] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const toast = useToast();
 
   const { mutate, isLoading } = useMutation({
     mutationFn: createUser,
     onSuccess: () => {
-      console.log("Formulario preenchido com sucesso");
-      setSuccessMsg("Usuário cadastrado com sucesso!");
+      toast.success("Usuário cadastrado com sucesso!");
       methods.reset();
     },
     onError: (err) => {
-      setErrorMsg(
+      toast.error(
         err?.response?.data?.message ||
           err?.message ||
           "Erro ao cadastrar usuário. Tente novamente."
@@ -39,21 +42,58 @@ export default function Form() {
       zipCode: data.zipCode,
     };
 
+    const parseDate = (dateStr) => {
+      try {
+        const date = new Date(dateStr);
+        return date.toISOString().split("T")[0];
+      } catch {
+        return new Date().toISOString().split("T")[0]; // fallback to current date
+      }
+    };
+
     const userPayload = {
       name: data.name,
-      cpf: data.cpf,
+      email: data.email,
+      cpf: data.cpf.replace(/\D/g, ""),
       address,
       esportsInterests: data.esportsInterests
         ? data.esportsInterests.split(",").map((item) => item.trim())
         : [],
       attendedEvents: data.attendedEvents
-        ? data.attendedEvents.split(",").map((item) => item.trim())
+        ? data.attendedEvents.split(";").map((event) => {
+            const [name, date, location] = event
+              .split("|")
+              .map((item) => item.trim());
+            return {
+              name: name || "Evento",
+              date: parseDate(date),
+              location: location || "Local não especificado",
+            };
+          })
         : [],
       participatedActivities: data.participatedActivities
-        ? data.participatedActivities.split(",").map((item) => item.trim())
+        ? data.participatedActivities.split(";").map((activity) => {
+            const [name, date, description] = activity
+              .split("|")
+              .map((item) => item.trim());
+            return {
+              name: name || "Atividade",
+              date: parseDate(date),
+              description: description || "Sem descrição",
+            };
+          })
         : [],
       purchases: data.purchases
-        ? data.purchases.split(",").map((item) => item.trim())
+        ? data.purchases.split(";").map((purchase) => {
+            const [item, amount, date] = purchase
+              .split("|")
+              .map((item) => item.trim());
+            return {
+              item: item || "Item",
+              amount: Number(amount) || 0,
+              date: parseDate(date),
+            };
+          })
         : [],
     };
 
@@ -82,12 +122,6 @@ export default function Form() {
                 {isLoading ? "Enviando..." : "Cadastrar"}
               </Button>
               {isLoading && <Loader />}
-              {successMsg && (
-                <div className="text-green-600 text-sm">{successMsg}</div>
-              )}
-              {errorMsg && (
-                <div className="text-red-600 text-sm">{errorMsg}</div>
-              )}
             </form>
           </FormProvider>
         </div>
