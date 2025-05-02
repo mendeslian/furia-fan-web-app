@@ -81,7 +81,7 @@ export default function PersonalDataForm() {
         }}
         maxLength={14}
       />
-      <div className="flex gap-1 flex-col mb-2">
+      <div className="flex gap-1 flex-col mt-3 mb-3">
         <h3 className="font-semibold text-lg">Interesses e Atividades</h3>
         <p className="font-medium text-xs opacity-80">
           Obs: Separe as informações por vírgula

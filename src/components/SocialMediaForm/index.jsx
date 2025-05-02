@@ -31,7 +31,7 @@ export default function SocialMediaForm() {
         placeholder="Token de acesso"
       />
       <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? <TextLoader text="Enviando..." /> : "Cadastrar"}
+        {isSubmitting ? <Loader /> : ""}
       </Button>
     </>
   );

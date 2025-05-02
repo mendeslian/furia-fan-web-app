@@ -1,9 +1,11 @@
 import { useFormContext } from "react-hook-form";
+import { useRef } from "react";
 import Input from "../Input";
 import Select from "../Select";
 
-export default function DocumentForm({ fileInputRef }) {
+export default function DocumentForm() {
   const { setValue } = useFormContext();
+  const fileInputRef = useRef(null);
 
   return (
     <>
