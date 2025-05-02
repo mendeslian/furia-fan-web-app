@@ -34,7 +34,7 @@ export default function Footer() {
     },
   ];
   return (
-    <footer className="w-full bg-[#0b0b0b] border-t border-neutral-800 py-12 shadow-2xl">
+    <footer className="w-full bg-neutral-900 border-t border-neutral-700 py-12 shadow-2xl">
       <div className="max-w-5xl w-full mx-auto flex flex-col gap-8 px-5">
         <div className="flex flex-col items-center md:flex-row md:justify-between gap-8 mb-12">
           <div className="max-w-xs">
@@ -113,7 +113,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <hr className="border-neutral-900" />
+        <hr className="border-neutral-800" />
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-neutral-400 text-xs">
             © 2025 Furia. All Rights Reserved.
