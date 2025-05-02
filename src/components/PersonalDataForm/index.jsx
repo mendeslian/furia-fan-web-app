@@ -90,27 +90,27 @@ export default function PersonalDataForm() {
 
       <Input
         name="esportsInterests"
-        label="Interesses em E-sports (opcional)"
+        label="Interesses em e-sports (opcional)"
         placeholder="CS:GO, League of Legends, Valorant"
         helperText="Separe os jogos por vírgula"
       />
       <Input
         name="attendedEvents"
         label="Eventos que participou (opcional)"
-        placeholder="IEM Rio Major 2022|2022-11-13|Rio de Janeiro; BLAST Premier 2023|2023-06-20|São Paulo"
-        helperText="Formato: Nome|Data|Local (separe eventos com ponto e vírgula)"
+        placeholder="IEM Rio Major 2022/2022-11-13/Rio de Janeiro"
+        helperText="Formato: Nome/Data/Local (separe eventos com ponto e vírgula)"
       />
       <Input
         name="participatedActivities"
         label="Atividades que participou (opcional)"
-        placeholder="Campeonato Universitário|2023-05-10|Participação em campeonato universitário"
-        helperText="Formato: Nome|Data|Descrição (separe atividades com ponto e vírgula)"
+        placeholder="Campeonato Universitário/2023-05-10/Participação em campeonato universitário"
+        helperText="Formato: Nome/Data/Descrição (separe atividades com ponto e vírgula)"
       />
       <Input
         name="purchases"
         label="Compras realizadas (opcional)"
-        placeholder="Camiseta FURIA|120|2023-08-10"
-        helperText="Formato: Item|Valor|Data (separe compras com ponto e vírgula)"
+        placeholder="Camiseta FURIA/120/2023-08-10"
+        helperText="Formato: Item/Valor/Data (separe compras com ponto e vírgula)"
       />
     </>
   );

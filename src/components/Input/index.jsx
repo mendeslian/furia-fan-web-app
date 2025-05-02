@@ -61,8 +61,8 @@ export default function Input({
   });
 
   return (
-    <div className={`w-full flex flex-col gap-[4px] ${className}`}>
-      <p className="text-sm text-neutral-900 font-medium capitalize">{label}</p>
+    <div className={`w-full flex flex-col gap-[4px] mb-2 ${className}`}>
+      <p className="text-sm text-neutral-900 font-medium">{label}</p>
       <div className="w-full h-[40px] flex justify-center items-center gap-[8px] bg-neutral-100 rounded-sm px-[12px] relative">
         <input
           className="w-full h-full text-neutral-900 text-sm font-normal"

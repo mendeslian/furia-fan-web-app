@@ -20,12 +20,17 @@ export default function Form() {
   const methods = useForm();
   const toast = useToast();
   const [currentStep, setCurrentStep] = useState(1);
+  const [completedSteps, setCompletedSteps] = useState([]);
+  const [formData, setFormData] = useState({});
 
   const { mutate, isLoading } = useMutation({
     mutationFn: createUser,
     onSuccess: () => {
-      toast.success("Usuário cadastrado com sucesso!");
+      toast.success("Cadastro finalizado com sucesso!");
       methods.reset();
+      setCurrentStep(1);
+      setCompletedSteps([]);
+      setFormData({});
     },
     onError: (err) => {
       toast.error(
@@ -36,103 +41,127 @@ export default function Form() {
     },
   });
 
-  const onSubmit = async (data) => {
-    const address = {
-      street: data.street,
-      number: data.number,
-      city: data.city,
-      state: data.state,
-      neighborhood: data.neighborhood,
-      complement: data.complement,
-      zipCode: data.zipCode,
-    };
+  const handleStepSubmit = async (data) => {
+    try {
+      const newFormData = { ...formData };
 
-    const parseDate = (dateStr) => {
-      try {
-        const date = new Date(dateStr);
-        return date.toISOString().split("T")[0];
-      } catch {
-        return new Date().toISOString().split("T")[0]; // fallback to current date
+      switch (currentStep) {
+        case 1:
+          newFormData.personalData = {
+            name: data.name,
+            cpf: data.cpf.replace(/\D/g, ""),
+            address: {
+              street: data.street,
+              number: data.number,
+              city: data.city,
+              state: data.state,
+              neighborhood: data.neighborhood,
+              complement: data.complement,
+              zipCode: data.zipCode,
+            },
+            esportsInterests: data.esportsInterests
+              ? data.esportsInterests.split(",").map((item) => item.trim())
+              : [],
+            attendedEvents: data.attendedEvents
+              ? data.attendedEvents.split(";").map((event) => {
+                  const [name, date, location] = event
+                    .split("/")
+                    .map((item) => item.trim());
+                  return {
+                    name: name || "Evento",
+                    date: parseDate(date),
+                    location: location || "Local não especificado",
+                  };
+                })
+              : [],
+            participatedActivities: data.participatedActivities
+              ? data.participatedActivities.split(";").map((activity) => {
+                  const [name, date, description] = activity
+                    .split("/")
+                    .map((item) => item.trim());
+                  return {
+                    name: name || "Atividade",
+                    date: parseDate(date),
+                    description: description || "Sem descrição",
+                  };
+                })
+              : [],
+            purchases: data.purchases
+              ? data.purchases.split(";").map((purchase) => {
+                  const [item, amount, date] = purchase
+                    .split("/")
+                    .map((item) => item.trim());
+                  return {
+                    item: item || "Item",
+                    amount: Number(amount) || 0,
+                    date: parseDate(date),
+                  };
+                })
+              : [],
+          };
+          break;
+        case 2:
+          newFormData.documents = {
+            documentType: data.documentType,
+            documentNumber: data.documentNumber,
+            documentImage: data.documentImage,
+          };
+          break;
+        case 3:
+          newFormData.socialMedia = {
+            // Add social media data structure here
+          };
+          mutate(newFormData);
+          return;
       }
-    };
 
-    const userPayload = {
-      name: data.name,
-      email: data.email,
-      cpf: data.cpf.replace(/\D/g, ""),
-      address,
-      esportsInterests: data.esportsInterests
-        ? data.esportsInterests.split(",").map((item) => item.trim())
-        : [],
-      attendedEvents: data.attendedEvents
-        ? data.attendedEvents.split(";").map((event) => {
-            const [name, date, location] = event
-              .split("|")
-              .map((item) => item.trim());
-            return {
-              name: name || "Evento",
-              date: parseDate(date),
-              location: location || "Local não especificado",
-            };
-          })
-        : [],
-      participatedActivities: data.participatedActivities
-        ? data.participatedActivities.split(";").map((activity) => {
-            const [name, date, description] = activity
-              .split("|")
-              .map((item) => item.trim());
-            return {
-              name: name || "Atividade",
-              date: parseDate(date),
-              description: description || "Sem descrição",
-            };
-          })
-        : [],
-      purchases: data.purchases
-        ? data.purchases.split(";").map((purchase) => {
-            const [item, amount, date] = purchase
-              .split("|")
-              .map((item) => item.trim());
-            return {
-              item: item || "Item",
-              amount: Number(amount) || 0,
-              date: parseDate(date),
-            };
-          })
-        : [],
-    };
+      setFormData(newFormData);
+      setCompletedSteps([...completedSteps, currentStep]);
+      setCurrentStep((prev) => prev + 1);
+      toast.success("Dados salvos com sucesso!");
+    } catch (error) {
+      console.log(error);
+      toast.error("Erro ao salvar dados. Tente novamente:");
+    }
+  };
 
-    mutate(userPayload);
+  const parseDate = (dateStr) => {
+    try {
+      const date = new Date(dateStr);
+      return date.toISOString().split("T")[0];
+    } catch {
+      return new Date().toISOString().split("T")[0];
+    }
   };
 
   const renderStepIndicator = () => (
-    <div className="flex items-center justify-between mb-8 w-full">
+    <div className="flex items-center justify-between mb-4 w-full">
       {steps.map((step, index) => (
         <div key={step.number} className="flex items-center">
           <div
             className={`rounded-full font-semibold h-8 w-8 flex items-center justify-center ${
-              currentStep > step.number
+              completedSteps.includes(step.number)
                 ? "bg-yellow-500 text-white"
                 : currentStep === step.number
                 ? "bg-yellow-500 text-white"
                 : "bg-gray-300 text-gray-600"
             }`}
           >
-            {currentStep > step.number ? (
+            {completedSteps.includes(step.number) ? (
               <Icon icon="Check" size={16} />
             ) : (
               step.number
             )}
           </div>
           <span
-            className={`ml-2 text-sm font-medium ${
+            className={`ml-2 text-sm text-nowrap font-medium ${
               currentStep >= step.number ? "text-gray-900" : "text-gray-400"
             }`}
           >
             {step.title}
           </span>
           {index < steps.length - 1 && (
-            <div className="h-[2px] w-32 mx-4 bg-gray-300" />
+            <div className="h-[2px] w-23 mx-2 bg-gray-300" />
           )}
         </div>
       ))}
@@ -144,14 +173,6 @@ export default function Form() {
     { number: 2, title: "Documentos", component: DocumentForm },
     { number: 3, title: "Redes sociais", component: SocialMediaForm },
   ];
-
-  const nextStep = () => {
-    setCurrentStep((prev) => Math.min(prev + 1, steps.length));
-  };
-
-  const prevStep = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 1));
-  };
 
   return (
     <section
@@ -167,7 +188,7 @@ export default function Form() {
         <div className="max-w-2xl w-full bg-white/95 rounded-md overflow-hidden shadow-[0_0_25px_rgba(0,0,0,0.15)] mb-8">
           <FormProvider {...methods}>
             <form
-              onSubmit={methods.handleSubmit(onSubmit)}
+              onSubmit={methods.handleSubmit(handleStepSubmit)}
               className="w-full h-full p-6 flex flex-col gap-3"
             >
               {renderStepIndicator()}
@@ -179,21 +200,23 @@ export default function Form() {
                     </div>
                   )
               )}
-              <div className="flex justify-between mt-6">
-                {currentStep > 1 && (
-                  <Button type="button" onClick={prevStep}>
-                    Voltar
-                  </Button>
-                )}
-                {currentStep < steps.length ? (
-                  <Button type="button" onClick={nextStep}>
-                    Próximo
-                  </Button>
-                ) : (
-                  <Button type="submit" disabled={isLoading}>
-                    {isLoading ? "Enviando..." : "Cadastrar"}
-                  </Button>
-                )}
+              <div className="flex justify-between mt-2">
+                {currentStep > 1 &&
+                  !completedSteps.includes(currentStep - 1) && (
+                    <Button
+                      type="button"
+                      onClick={() => setCurrentStep((prev) => prev - 1)}
+                    >
+                      Voltar
+                    </Button>
+                  )}
+                <Button type="submit" disabled={isLoading} fullWidth>
+                  {isLoading
+                    ? "Enviando..."
+                    : currentStep === steps.length
+                    ? "Finalizar cadastro"
+                    : "Salvar e continuar"}
+                </Button>
               </div>
               {isLoading && <Loader />}
             </form>
