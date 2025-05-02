@@ -92,7 +92,7 @@ export default function PersonalDataForm() {
         name="esportsInterests"
         label="Interesses em e-sports (opcional)"
         placeholder="CS:GO, League of Legends, Valorant"
-        helperText="Separe os jogos por vírgula"
+        helperText="Formato: Jogo 1,Jogo 2,Jogo 3 (separe os jogos com vírgula)"
       />
       <Input
         name="attendedEvents"
