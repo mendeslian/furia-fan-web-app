@@ -26,6 +26,7 @@ export default function Form() {
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]);
   const [formData, setFormData] = useState({});
+  const [userId, setUserId] = useState(null);
 
   // Create user mutation
   const createUserMutation = useMutation({
@@ -77,7 +78,7 @@ export default function Form() {
 
       switch (currentStep) {
         case 1:
-          // Personal data step
+          // Personal data step - Create user
           newFormData.name = data.name;
           newFormData.email = data.email;
           newFormData.cpf = data.cpf.replace(/\D/g, "");
@@ -129,19 +130,9 @@ export default function Form() {
                 };
               })
             : [];
-          break;
 
-        case 2:
-          // Document step
-          newFormData.documentType = data.documentType;
-          newFormData.documentNumber = data.documentNumber.replace(/\D/g, "");
-          newFormData.documentImage = data.documentImage;
-          break;
-
-        case 3:
-          // Social media step - final step
           try {
-            // Create user with all collected data
+            // Create user with personal data
             const userData = await createUserMutation.mutateAsync({
               name: newFormData.name,
               email: newFormData.email,
@@ -153,43 +144,104 @@ export default function Form() {
               purchases: newFormData.purchases,
             });
 
-            // Get the user ID from the response
-            const userId = userData.user.id;
+            console.log("User creation response:", userData);
 
-            // Upload document
-            await uploadDocumentMutation.mutateAsync({
-              userId,
-              documentData: {
-                documentType: newFormData.documentType,
-                documentNumber: newFormData.documentNumber,
-                documentImage: newFormData.documentImage,
-              },
-            });
+            const newUserId =
+              userData?.id ||
+              userData?.user?.id ||
+              (userData?.data?.user && userData.data.user.id);
 
-            // Connect single social media account
-            if (data.socialMediaPlatform && data.socialMediaAccount) {
+            if (!newUserId) {
+              console.error("User ID not found in response:", userData);
+              throw new Error("Não foi possível obter o ID do usuário");
+            }
+
+            setUserId(newUserId);
+          } catch (error) {
+            console.error("Error creating user:", error);
+            toast.error(
+              error?.response?.data?.message ||
+                error?.message ||
+                "Erro ao criar usuário. Tente novamente."
+            );
+            throw error;
+          }
+          break;
+
+        case 2:
+          // Document step - Upload document
+          newFormData.documentType = data.documentType;
+          newFormData.documentNumber = data.documentNumber.replace(/\D/g, "");
+          newFormData.documentImage = data.documentImage;
+
+          try {
+            if (
+              userId &&
+              newFormData.documentType &&
+              newFormData.documentNumber
+            ) {
+              await uploadDocumentMutation.mutateAsync({
+                userId,
+                documentData: {
+                  documentType: newFormData.documentType,
+                  documentNumber: newFormData.documentNumber,
+                  documentImage: newFormData.documentImage,
+                },
+              });
+            } else {
+              console.error("Missing userId or document data");
+              throw new Error(
+                "Dados de documento incompletos ou ID de usuário não encontrado"
+              );
+            }
+          } catch (error) {
+            console.error("Error uploading document:", error);
+            toast.error(
+              error?.response?.data?.message ||
+                error?.message ||
+                "Erro ao enviar documento. Tente novamente."
+            );
+            throw error;
+          }
+          break;
+
+        case 3:
+          // Social media step - Connect social media
+          newFormData.socialMediaPlatform = data.socialMediaPlatform;
+          newFormData.socialMediaAccount = data.socialMediaAccount;
+
+          try {
+            if (
+              userId &&
+              newFormData.socialMediaPlatform &&
+              newFormData.socialMediaAccount
+            ) {
               await connectSocialMediaMutation.mutateAsync({
                 userId,
                 socialData: {
-                  platform: data.socialMediaPlatform,
-                  accountId: data.socialMediaAccount,
+                  platform: newFormData.socialMediaPlatform,
+                  accountId: newFormData.socialMediaAccount,
                 },
               });
             }
 
+            // Final step completed
             toast.success("Cadastro finalizado com sucesso!");
             methods.reset();
             setCurrentStep(1);
             setCompletedSteps([]);
             setFormData({});
+            setUserId(null);
             return;
           } catch (error) {
-            console.error("Error in final submission:", error);
-            toast.error(
-              error?.response?.data?.message ||
-                error?.message ||
-                "Erro ao finalizar cadastro. Tente novamente."
-            );
+            console.error("Error connecting social media:", error);
+            // We still complete the form even if social media fails
+            toast.success("Cadastro finalizado com sucesso!");
+            methods.reset();
+            setCurrentStep(1);
+            setCompletedSteps([]);
+            setFormData({});
+            setUserId(null);
             return;
           }
       }
@@ -197,7 +249,6 @@ export default function Form() {
       setFormData(newFormData);
       setCompletedSteps([...completedSteps, currentStep]);
       setCurrentStep((prev) => prev + 1);
-      toast.success("Dados salvos com sucesso!");
     } catch (error) {
       console.error("Error in form submission:", error);
       toast.error(
@@ -283,20 +334,7 @@ export default function Form() {
                     </div>
                   )
               )}
-              <div className="flex justify-between mt-2">
-                {currentStep > 1 && (
-                  <Button
-                    type="button"
-                    onClick={() => setCurrentStep((prev) => prev - 1)}
-                    disabled={
-                      createUserMutation.isPending ||
-                      uploadDocumentMutation.isPending ||
-                      connectSocialMediaMutation.isPending
-                    }
-                  >
-                    Voltar
-                  </Button>
-                )}
+              <div className="flex justify-end mt-2">
                 <Button
                   type="submit"
                   disabled={
@@ -304,9 +342,11 @@ export default function Form() {
                     uploadDocumentMutation.isPending ||
                     connectSocialMediaMutation.isPending
                   }
-                  fullWidth={
-                    currentStep === 1 ||
-                    !completedSteps.includes(currentStep - 1)
+                  fullWidth
+                  loading={
+                    createUserMutation.isPending ||
+                    uploadDocumentMutation.isPending ||
+                    connectSocialMediaMutation.isPending
                   }
                 >
                   {createUserMutation.isPending ||
@@ -317,9 +357,6 @@ export default function Form() {
                     : "Salvar e continuar"}
                 </Button>
               </div>
-              {(createUserMutation.isPending ||
-                uploadDocumentMutation.isPending ||
-                connectSocialMediaMutation.isPending) && <Loader />}
             </form>
           </FormProvider>
         </div>

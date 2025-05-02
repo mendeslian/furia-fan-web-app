@@ -4,8 +4,14 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 // Cria um novo usuário
 async function createUser(userData) {
-  const { data } = await axios.post(`${API_URL}/user`, userData);
-  return data;
+  try {
+    const response = await axios.post(`${API_URL}/user`, userData);
+    console.log("Create user API response:", response);
+    return response.data; // Make sure this returns the data with the user ID
+  } catch (error) {
+    console.error("Error creating user:", error);
+    throw error;
+  }
 }
 
 // Busca usuário por ID
@@ -26,23 +32,32 @@ async function deleteUser(id) {
   return data;
 }
 
-// Faz upload e verifica documento do usuário
-async function uploadDocument(id, documentData) {
-  const formData = new FormData();
-  formData.append("documentImage", documentData.documentImage);
-  formData.append("documentType", documentData.documentType);
-  formData.append("documentNumber", documentData.documentNumber);
+// Check the uploadDocument function
+async function uploadDocument(userId, documentData) {
+  try {
+    // Create FormData for file upload
+    const formData = new FormData();
+    formData.append("documentType", documentData.documentType);
+    formData.append("documentNumber", documentData.documentNumber);
 
-  const { data } = await axios.post(
-    `${API_URL}/user/${id}/document`,
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+    if (documentData.documentImage) {
+      formData.append("documentImage", documentData.documentImage);
     }
-  );
-  return data;
+
+    const response = await axios.post(
+      `${API_URL}/user/${userId}/document`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading document:", error);
+    throw error;
+  }
 }
 
 // Conecta conta de rede social
