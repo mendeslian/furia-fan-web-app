@@ -28,7 +28,6 @@ export default function Form() {
   const [formData, setFormData] = useState({});
   const [userId, setUserId] = useState(null);
 
-  // Create user mutation
   const createUserMutation = useMutation({
     mutationFn: createUser,
     onSuccess: (data) => {
@@ -45,7 +44,6 @@ export default function Form() {
     },
   });
 
-  // Upload document mutation
   const uploadDocumentMutation = useMutation({
     mutationFn: ({ userId, documentData }) =>
       uploadDocument(userId, documentData),
@@ -62,7 +60,6 @@ export default function Form() {
     },
   });
 
-  // Connect social media mutation
   const connectSocialMediaMutation = useMutation({
     mutationFn: ({ userId, socialData }) =>
       connectSocialMedia(userId, socialData),
@@ -78,7 +75,6 @@ export default function Form() {
 
       switch (currentStep) {
         case 1:
-          // Personal data step - Create user
           newFormData.name = data.name;
           newFormData.email = data.email;
           newFormData.cpf = data.cpf.replace(/\D/g, "");
@@ -132,7 +128,6 @@ export default function Form() {
             : [];
 
           try {
-            // Create user with personal data
             const userData = await createUserMutation.mutateAsync({
               name: newFormData.name,
               email: newFormData.email,
@@ -167,9 +162,7 @@ export default function Form() {
             throw error;
           }
           break;
-
         case 2:
-          // Document step - Upload document
           newFormData.documentType = data.documentType;
           newFormData.documentNumber = data.documentNumber.replace(/\D/g, "");
           newFormData.documentImage = data.documentImage;
@@ -206,7 +199,6 @@ export default function Form() {
           break;
 
         case 3:
-          // Social media step - Connect social media
           newFormData.socialMediaPlatform = data.socialMediaPlatform;
           newFormData.socialMediaAccount = data.socialMediaAccount;
 
@@ -225,7 +217,6 @@ export default function Form() {
               });
             }
 
-            // Final step completed
             toast.success("Cadastro finalizado com sucesso!");
             methods.reset();
             setCurrentStep(1);
@@ -235,7 +226,6 @@ export default function Form() {
             return;
           } catch (error) {
             console.error("Error connecting social media:", error);
-            // We still complete the form even if social media fails
             toast.success("Cadastro finalizado com sucesso!");
             methods.reset();
             setCurrentStep(1);
