@@ -54,8 +54,8 @@ export default function Footer() {
             </div>
 
             <p className="text-neutral-400 text-sm text-center md:text-left">
-              Seu assistente virtual para tudo sobre o mundo do CS2, disponível
-              24 horas por dia.
+              Preencha os fomulários e realize seu cadastro na nossa comunidade
+              furiosa!
             </p>
           </div>
 
