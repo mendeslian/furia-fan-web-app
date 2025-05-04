@@ -63,7 +63,7 @@ export default function PersonalDataForm() {
           required={true}
           mask="#####-###"
           pattern={{
-            value: /^[0-9]{8}$/,
+            value: /^\d{5}-\d{3}$|^\d{8}$/,
             message: "CEP deve conter 8 dígitos numéricos",
           }}
           maxLength={9}
