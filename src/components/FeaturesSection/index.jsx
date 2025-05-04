@@ -1,9 +1,6 @@
 // Components
 import Icon from "../icon";
 
-// Assets
-import FuriaShirtBackground from "../../assets/furia-shirt-background.png";
-
 export default function Features() {
   const features = [
     {
