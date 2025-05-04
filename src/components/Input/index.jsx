@@ -1,6 +1,6 @@
 import { useFormContext } from "react-hook-form";
 import { useState, useEffect } from "react";
-import Icon from "../icon";
+import Icon from "../Icon";
 
 export default function Input({
   name = "",

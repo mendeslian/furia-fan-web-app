@@ -3,7 +3,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 
 // Components
-import Icon from "../icon";
+import Icon from "../Icon";
 import Button from "../Button";
 import Loader from "../Loader";
 import PersonalDataForm from "../PersonalDataForm";

@@ -1,5 +1,5 @@
 // Components
-import Icon from "../icon";
+import Icon from "../Icon";
 
 export default function Features() {
   const features = [
