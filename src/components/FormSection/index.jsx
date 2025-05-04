@@ -276,9 +276,9 @@ export default function Form() {
   };
 
   const renderStepIndicator = () => (
-    <div className="flex items-center justify-between mb-4 w-full">
+    <div className="flex flex-col sm:flex-row items-center justify-between mb-4 w-full">
       {steps.map((step, index) => (
-        <div key={step.number} className="flex items-center">
+        <div key={step.number} className="flex items-center mb-2 sm:mb-0">
           <div
             className={`rounded-full font-semibold h-8 w-8 flex items-center justify-center ${
               completedSteps.includes(step.number)
@@ -295,14 +295,14 @@ export default function Form() {
             )}
           </div>
           <span
-            className={`ml-2 text-sm text-nowrap font-medium ${
+            className={`ml-2 text-sm font-medium ${
               currentStep >= step.number ? "text-gray-900" : "text-gray-400"
             }`}
           >
             {step.title}
           </span>
           {index < steps.length - 1 && (
-            <div className="h-[2px] w-23 mx-2 bg-gray-300" />
+            <div className="hidden sm:block h-[2px] w-16 mx-2 bg-gray-300" />
           )}
         </div>
       ))}
