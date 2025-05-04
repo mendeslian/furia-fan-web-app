@@ -18,6 +18,7 @@ import {
   createUser,
   uploadDocument,
   connectSocialMedia,
+  validateEsportsProfile,
 } from "../../services/userService";
 
 export default function Form() {
@@ -66,6 +67,15 @@ export default function Form() {
     onError: (error) => {
       console.error("Error connecting social media:", error);
       // We don't show toast errors for social media as they're not critical
+    },
+  });
+
+  const validateEsportsProfileMutation = useMutation({
+    mutationFn: ({ userId, profileData }) =>
+      validateEsportsProfile(userId, profileData),
+    onError: (error) => {
+      console.error("Error validating esports profile:", error);
+      // We don't show toast errors for esports profile as they're not critical
     },
   });
 
@@ -200,7 +210,12 @@ export default function Form() {
 
         case 3:
           newFormData.socialMediaPlatform = data.socialMediaPlatform;
-          newFormData.socialMediaAccount = data.socialMediaAccount;
+          newFormData.socialMediaAccount = data.socialMediaAccount.replace(
+            /^@/,
+            ""
+          );
+          newFormData.esportsPlatform = data.esportsPlatform;
+          newFormData.esportsProfileUrl = data.esportsProfileUrl;
 
           try {
             if (
@@ -217,6 +232,20 @@ export default function Form() {
               });
             }
 
+            if (
+              userId &&
+              newFormData.esportsPlatform &&
+              newFormData.esportsProfileUrl
+            ) {
+              await validateEsportsProfileMutation.mutateAsync({
+                userId,
+                profileData: {
+                  platform: newFormData.esportsPlatform,
+                  profileUrl: newFormData.esportsProfileUrl,
+                },
+              });
+            }
+
             toast.success("Cadastro finalizado com sucesso!");
             methods.reset();
             setCurrentStep(1);
@@ -225,7 +254,7 @@ export default function Form() {
             setUserId(null);
             return;
           } catch (error) {
-            console.error("Error connecting social media:", error);
+            console.error("Error in final step:", error);
             toast.success("Cadastro finalizado com sucesso!");
             methods.reset();
             setCurrentStep(1);
