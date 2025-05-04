@@ -66,7 +66,6 @@ export default function Form() {
       connectSocialMedia(userId, socialData),
     onError: (error) => {
       console.error("Error connecting social media:", error);
-      // We don't show toast errors for social media as they're not critical
     },
   });
 
@@ -75,7 +74,6 @@ export default function Form() {
       validateEsportsProfile(userId, profileData),
     onError: (error) => {
       console.error("Error validating esports profile:", error);
-      // We don't show toast errors for esports profile as they're not critical
     },
   });
 
@@ -164,12 +162,7 @@ export default function Form() {
             setUserId(newUserId);
           } catch (error) {
             console.error("Error creating user:", error);
-            toast.error(
-              error?.response?.data?.message ||
-                error?.message ||
-                "Erro ao criar usuário. Tente novamente."
-            );
-            throw error;
+            return;
           }
           break;
         case 2:
@@ -199,12 +192,7 @@ export default function Form() {
             }
           } catch (error) {
             console.error("Error uploading document:", error);
-            toast.error(
-              error?.response?.data?.message ||
-                error?.message ||
-                "Erro ao enviar documento. Tente novamente."
-            );
-            throw error;
+            return;
           }
           break;
 
