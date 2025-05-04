@@ -19,7 +19,7 @@ export default function BrandSection() {
   const brandsCount = brands.length;
 
   return (
-    <section className="w-full h-48 bg-radial from-white from-50% to-neutral-300 flex items-center border-y border-neutral-700 shadow-2xl">
+    <section className="w-full h-48 flex items-center">
       <div
         className="w-full max-w-5xl h-16 mx-auto relative overflow-hidden"
         style={{

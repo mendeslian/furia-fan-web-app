@@ -300,7 +300,7 @@ export default function Form() {
 
   return (
     <section
-      className="min-h-screen bg-[radial-gradient(circle_at_70%_90%,#eab308_0%,rgba(93,254,214,0)_40%)]"
+      className="min-h-screen bg-[radial-gradient(circle_at_70%_90%,#efb100_0%,rgba(93,254,214,0)_40%)]"
       id="form"
     >
       <div className="max-w-5xl w-full mx-auto flex flex-col items-center gap-6 px-5 py-20">

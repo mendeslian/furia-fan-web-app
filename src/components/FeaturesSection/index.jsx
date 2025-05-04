@@ -7,62 +7,51 @@ import FuriaShirtBackground from "../../assets/furia-shirt-background.png";
 export default function Features() {
   const features = [
     {
-      id: "chat",
-      icon: "MessageCircle",
-      title: "Converse com o BOT",
+      id: "personal",
+      icon: "User",
+      title: "Dados Pessoais",
       description:
-        "Tire suas dúvidas sobre CS2, estratégias, mapas e tudo relacionado ao jogo diretamente com nosso assistente virtual.",
+        "Preencha seus dados pessoais para que possamos conhecer melhor você e personalizar sua experiência como fã da FURIA.",
     },
     {
-      id: "fast",
-      icon: "Zap",
-      title: "Respostas rápidas",
+      id: "documents",
+      icon: "FileText",
+      title: "Documentos",
       description:
-        "Obtenha informações precisas e atualizadas em segundos, sem precisar pesquisar em diversos sites.",
+        "Envie seus documentos de forma simples e segura. Utilizamos criptografia avançada para proteger suas informações.",
     },
     {
-      id: "available",
-      icon: "Clock",
-      title: "Disponível 24/7",
+      id: "social",
+      icon: "Globe",
+      title: "Redes Sociais",
       description:
-        "Acesse o Furia BOT a qualquer hora do dia ou da noite, sempre pronto para ajudar com suas dúvidas sobre CS2.",
+        "Conecte suas redes sociais para acompanhar novidades, participar de promoções exclusivas e interagir com a comunidade FURIA.",
     },
   ];
 
   return (
-    <section className="w-full py-20 relative border-y border-neutral-800 shadow-2xl bg-neutral-900">
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
-        style={{
-          backgroundImage: `url(${FuriaShirtBackground})`,
-        }}
-        aria-hidden="true"
-      />
-
+    <section className="w-full py-20 relative bg-neutral-100">
       <div className="max-w-5xl w-full mx-auto px-5 relative z-10">
-        <h2 className="text-3xl font-bold text-white text-center mb-4">
-          Como funciona?
+        <h2 className="text-3xl font-bold text-center mb-4">
+          Processo de Cadastro
         </h2>
-        <p className="text-neutral-400 text-center font-semibold mb-16 max-w-xl mx-auto tracking-wide">
-          Conheça as principais funcionalidades do Furia BOT e como ele pode te
-          ajudar a melhorar no CS2
+        <p className="text-neutral-600 text-center font-medium mb-16 max-w-xl mx-auto">
+          Nosso formulário é dividido em etapas simples para facilitar seu
+          cadastro
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-          <div className="hidden md:block absolute top-8 left-1/6 right-1/6 h-[1px] bg-yellow-600 z-0 "></div>
-
           {features.map((feature) => (
             <div
               key={feature.id}
-              className="flex flex-col items-center text-center relative z-10"
+              className="bg-white/95 min-h-80 rounded-md overflow-hidden shadow-lg p-6 flex flex-col items-center justify-center text-center"
             >
-              <div className="w-16 h-16 rounded-full bg-yellow-500 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(234,179,8,0.5)] ">
-                <Icon icon={feature.icon} size={24} />
+              <div className="w-16 h-16 rounded-full bg-yellow-500 flex items-center justify-center mb-6">
+                <Icon icon={feature.icon} size={24} className="text-white" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-neutral-400 text-sm font-semibold px-4">
+              <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+              <div className="w-20 h-1 mb-4 rounded-full bg-yellow-500"></div>
+              <p className="text-neutral-500 text-sm font-semibold">
                 {feature.description}
               </p>
             </div>
