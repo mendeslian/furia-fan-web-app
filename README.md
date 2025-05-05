@@ -18,16 +18,16 @@ O **Furia Fan Web App** é uma interface desenvolvida com React para conectar f�
 - React Toastify
 - React Hook Form
 
-## 🔧 Instalação
+## 📦 Instalação
 
-1. Clone o repositório:
+1. **Clone o repositório:**
 
 ```bash
 git clone https://github.com/mendeslian/furia-fan-web-app.git
-cd furia-fan-web-app
+cd furia-bot-web-app
 ```
 
-2. Instale as dependências:
+2. **Instale as dependências:**
 
 ```bash
 npm install
@@ -35,13 +35,7 @@ npm install
 yarn install
 ```
 
-3. Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
-
-```bash
-VITE_API_URL=
-```
-
-4. Inicie a aplicação em modo de desenvolvimento:
+3. **Inicie a aplicação:**
 
 ```bash
 npm run dev
@@ -49,7 +43,9 @@ npm run dev
 yarn dev
 ```
 
-5. Para construir a aplicação para produção:
+> A aplicação estará disponível em `http://localhost:3000`
+
+4. **Para criar uma build de produção:**
 
 ```bash
 npm run build
@@ -57,7 +53,7 @@ npm run build
 yarn build
 ```
 
-6. Para visualizar a aplicação em produção localmente:
+5. **Para visualizar a build:**
 
 ```bash
 npm run preview
