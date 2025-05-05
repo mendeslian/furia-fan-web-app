@@ -24,7 +24,7 @@ O **Furia Fan Web App** é uma interface desenvolvida com React para conectar f�
 
 ```bash
 git clone https://github.com/mendeslian/furia-fan-web-app.git
-cd furia-bot-web-app
+cd furia-fan-web-app
 ```
 
 2. **Instale as dependências:**
